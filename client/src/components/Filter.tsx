@@ -1,4 +1,3 @@
-import React from "react";
 import type { PassengerQuery } from "../api/passengersApi";
 
 interface FiltersProps {
@@ -6,7 +5,7 @@ interface FiltersProps {
   onChange: (newFilters: PassengerQuery) => void;
 }
 
-const Filters: React.FC<FiltersProps> = ({ filters, onChange }) => {
+const Filters = ({ filters, onChange }: FiltersProps) => {
   return (
     <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
       <select
@@ -32,7 +31,7 @@ const Filters: React.FC<FiltersProps> = ({ filters, onChange }) => {
           })
         }
       >
-        <option value="">Class (All)</option>
+        <option value="">Ticket Class (All)</option>
         <option value="1">1st</option>
         <option value="2">2nd</option>
         <option value="3">3rd</option>

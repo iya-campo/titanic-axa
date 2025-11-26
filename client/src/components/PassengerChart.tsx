@@ -1,12 +1,12 @@
-import React, { memo, useMemo } from "react";
+import { memo, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from "recharts";
 import type { Passenger } from "../types/Passenger";
 
-interface Props {
+interface PassengerChartProps {
   data: Passenger[];
 }
 
-const PassengerChart: React.FC<Props> = ({ data }) => {
+const PassengerChart = ({ data }: PassengerChartProps) => {
   const chartData = useMemo(() => {
     const grouped: Record<string, number> = {};
 

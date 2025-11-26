@@ -1,13 +1,14 @@
-import React, { memo } from "react";
-import type { Passenger } from "../types/Passenger";
+import { memo, useCallback } from "react";
+import type { Passenger, PassengerColumns } from "../types/Passenger";
 
-interface Props {
+interface PassengerTableProps {
   data: Passenger[];
+  columns: PassengerColumns[];
 }
 
-const PassengerTable: React.FC<Props> = ({ data }) => {
+const PassengerTable = ({ data, columns }: PassengerTableProps) => {
   
-  const  mapPort = (key: string) => {
+    const mapPort = useCallback((key: string) => {
     switch (key) {
       case 'C':
         return 'Cherbourg';
@@ -18,9 +19,9 @@ const PassengerTable: React.FC<Props> = ({ data }) => {
       default:
         return '';
     }
-  }
+  }, []);
 
-  const  mapTicket = (key: number) => {
+  const mapTicket = useCallback((key: number) => {
     switch (key) {
       case 1:
         return '1st';
@@ -31,7 +32,7 @@ const PassengerTable: React.FC<Props> = ({ data }) => {
       default:
         return 0;
     }
-  }
+  }, []);
 
   return (
     <table border={1} cellPadding={8}>
@@ -39,16 +40,16 @@ const PassengerTable: React.FC<Props> = ({ data }) => {
         <tr>
           <th>ID</th>
           <th>Name</th>
-          <th>Survived</th>
-          <th>Ticket class</th>
-          <th>Sex</th>
-          <th>Age</th>
-          <th># of Sibling / Spouse</th>
-          <th># of Parent / Child</th>
-          <th>Ticket number</th>
-          <th>Passenger fare</th>
-          <th>Cabin number</th>
-          <th>Port of Embarkation</th>
+          {columns.includes('survival') && <th>Survived</th>}
+          {columns.includes('class') && <th>Ticket class</th>}
+          {columns.includes('sex') && <th>Sex</th>}
+          {columns.includes('age') && <th>Age</th>}
+          {columns.includes('sibsp') && <th># of Sibling / Spouse</th>}
+          {columns.includes('parch') && <th># of Parent / Child</th>}
+          {columns.includes('ticket') && <th>Ticket number</th>}
+          {columns.includes('fare') && <th>Passenger fare</th>}
+          {columns.includes('cabin') && <th>Cabin number</th>}
+          {columns.includes('port') && <th>Port of Embarkation</th>}
         </tr>
       </thead>
       <tbody>
@@ -56,16 +57,16 @@ const PassengerTable: React.FC<Props> = ({ data }) => {
           <tr key={p.PassengerId}>
             <td>{p.PassengerId}</td>
             <td>{p.Name}</td>
-            <td>{p.Survived ? "Yes" : "No"}</td>
-            <td>{mapTicket(p.Pclass || 0)}</td>
-            <td>{p.Sex}</td>
-            <td>{p.Age}</td>
-            <td>{p.SibSp}</td>
-            <td>{p.Parch}</td>
-            <td>{p.Ticket}</td>
-            <td>{p.Fare}</td>
-            <td>{p.Cabin}</td>
-            <td>{mapPort(p.Embarked || '')}</td>
+            {columns.includes('survival') && <td>{p.Survived ? "Yes" : "No"}</td>}
+            {columns.includes('class') && <td>{mapTicket(p.Pclass || 0)}</td>}
+            {columns.includes('sex') && <td>{p.Sex}</td>}
+            {columns.includes('age') && <td>{p.Age}</td>}
+            {columns.includes('sibsp') && <td>{p.SibSp}</td>}
+            {columns.includes('parch') && <td>{p.Parch}</td>}
+            {columns.includes('ticket') && <td>{p.Ticket}</td>}
+            {columns.includes('fare') && <td>{p.Fare}</td>}
+            {columns.includes('cabin') && <td>{p.Cabin}</td>}
+            {columns.includes('port') && <td>{mapPort(p.Embarked || '')}</td>}
           </tr>
         ))}
       </tbody>

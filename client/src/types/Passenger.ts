@@ -12,3 +12,5 @@ export interface Passenger {
   Cabin?: string | null;
   Embarked?: string | null;
 }
+
+export type PassengerColumns = 'survival' | 'class' | 'sex' | 'age' | 'sibsp' | 'parch' | 'ticket' | 'fare' | 'cabin' | 'port';
