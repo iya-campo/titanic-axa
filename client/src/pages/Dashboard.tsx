@@ -6,6 +6,7 @@ import PassengerTable from "../components/PassengerTable";
 import PassengerChart from "../components/PassengerChart";
 import ChartSelect from "../components/ChartSelect";
 import Filters from "../components/Filters";
+import ToggleSelect from "../components/ToggleSelect/ToggleSelect";
 import { mapNames } from "../utils/common";
 
 const Dashboard = () => {
@@ -42,8 +43,11 @@ const Dashboard = () => {
       <h2 style={{ marginTop: "2rem" }}>{`Passengers per ${mapNames(option)}`}</h2>
       <PassengerChart data={data} option={option} />
 
-      <Filters filters={filters} onChange={handleFilterChange} />
-
+      <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+        <Filters filters={filters} onChange={handleFilterChange} />
+        <ToggleSelect columns={columns} onChange={handleColumnChange} />
+      </div>
+      
       {loading ? <p>Loading...</p> : <PassengerTable data={data} columns={columns} />}
     </div>
   );
