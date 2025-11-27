@@ -1,38 +1,28 @@
-import { memo, useCallback } from "react";
-import type { Passenger, PassengerColumns } from "../types/Passenger";
+import { memo } from "react";
+import type { Passenger, PassengerColumn } from "../types/Passenger";
+import { capitalize, mapNames, mapPort, mapTicket } from "../utils/common";
 
 interface PassengerTableProps {
   data: Passenger[];
-  columns: PassengerColumns[];
+  columns: PassengerColumn[];
 }
 
 const PassengerTable = ({ data, columns }: PassengerTableProps) => {
-  
-    const mapPort = useCallback((key: string) => {
-    switch (key) {
-      case 'C':
-        return 'Cherbourg';
-      case 'Q':
-        return 'Queenstown';
-      case 'S':
-        return 'Southampton';
-      default:
-        return '';
-    }
-  }, []);
 
-  const mapTicket = useCallback((key: number) => {
-    switch (key) {
-      case 1:
-        return '1st';
-      case 2:
-        return '2nd';
-      case 3:
-        return '3rd';
+  const mapValues = (col: PassengerColumn, val: string | number) => {
+    switch (col) {
+      case 'Survived':
+        return val ? 'Yes' : 'No'
+      case 'Pclass':
+        return mapTicket(val as number);
+      case 'Sex':
+        return capitalize(val as string)
+      case 'Embarked':
+        return mapPort(val as string);
       default:
-        return 0;
+        return val;
     }
-  }, []);
+  }
 
   return (
     <table border={1} cellPadding={8}>
@@ -40,35 +30,21 @@ const PassengerTable = ({ data, columns }: PassengerTableProps) => {
         <tr>
           <th>ID</th>
           <th>Name</th>
-          {columns.includes('survival') && <th>Survived</th>}
-          {columns.includes('class') && <th>Ticket class</th>}
-          {columns.includes('sex') && <th>Sex</th>}
-          {columns.includes('age') && <th>Age</th>}
-          {columns.includes('sibsp') && <th># of Sibling / Spouse</th>}
-          {columns.includes('parch') && <th># of Parent / Child</th>}
-          {columns.includes('ticket') && <th>Ticket number</th>}
-          {columns.includes('fare') && <th>Passenger fare</th>}
-          {columns.includes('cabin') && <th>Cabin number</th>}
-          {columns.includes('port') && <th>Port of Embarkation</th>}
+          {columns.map((col: PassengerColumn) => {
+            return columns.includes(col) && <th>{mapNames(col)}</th>
+          })}
         </tr>
       </thead>
       <tbody>
-        {data.map((p) => (
+        {data && data.length > 0 ? data.map((p) => (
           <tr key={p.PassengerId}>
             <td>{p.PassengerId}</td>
             <td>{p.Name}</td>
-            {columns.includes('survival') && <td>{p.Survived ? "Yes" : "No"}</td>}
-            {columns.includes('class') && <td>{mapTicket(p.Pclass || 0)}</td>}
-            {columns.includes('sex') && <td>{p.Sex}</td>}
-            {columns.includes('age') && <td>{p.Age}</td>}
-            {columns.includes('sibsp') && <td>{p.SibSp}</td>}
-            {columns.includes('parch') && <td>{p.Parch}</td>}
-            {columns.includes('ticket') && <td>{p.Ticket}</td>}
-            {columns.includes('fare') && <td>{p.Fare}</td>}
-            {columns.includes('cabin') && <td>{p.Cabin}</td>}
-            {columns.includes('port') && <td>{mapPort(p.Embarked || '')}</td>}
+            {columns.map((col: PassengerColumn) => {
+              return columns.includes(col) && <td>{mapValues(col, p[col] as string | number)}</td>
+            })}
           </tr>
-        ))}
+        )) : <p>No results found.</p>}
       </tbody>
     </table>
   );

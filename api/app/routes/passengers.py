@@ -10,8 +10,10 @@ router = APIRouter()
 def list_passengers(
     survived: int | None = None,
     pclass: int | None = None,
+    sex: str | None = None,
+    port: str | None = None,
     session: Session = Depends(get_session)
 ):
     service = PassengerService(session)
-    results = service.list_passengers(survived=survived, pclass=pclass)
+    results = service.list_passengers(survived=survived, pclass=pclass, sex=sex, port=port)
     return results

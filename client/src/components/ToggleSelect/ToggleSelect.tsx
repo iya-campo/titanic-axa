@@ -1,15 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import type { PassengerColumns } from "../../types/Passenger";
+import type { PassengerColumn } from "../../types/Passenger";
 import styles from "./ToggleSelect.module.css";
-
-type Option = {
-  id: string;
-  label: string;
-};
+import { mapNames } from "../../utils/common";
 
 interface ToggleSelectProps {
   columns: string[];
-  onChange: (selectedColumn: PassengerColumns) => void;
+  onChange: (selectedColumn: PassengerColumn) => void;
 }
 
 const ToggleSelect = ({ columns, onChange }: ToggleSelectProps) => {
@@ -17,17 +13,17 @@ const ToggleSelect = ({ columns, onChange }: ToggleSelectProps) => {
   
   const selectContainerRef = useRef<HTMLDivElement>(null);
 
-  const options: Option[] = [
-    { id: "survival", label: "Survival" },
-    { id: "class", label: "Ticket class" },
-    { id: "sex", label: "Sex" },
-    { id: "age", label: "Age" },
-    { id: "sibsp", label: "# of Sibling / Spouse" },
-    { id: "parch", label: "# of Parent / Child" },
-    { id: "ticket", label: "Ticket number" },
-    { id: "fare", label: "Passenger fare" },
-    { id: "cabin", label: "Cabin number" },
-    { id: "port", label: "Port of Embarkation" },
+  const options: PassengerColumn[] = [
+    "Survived",
+    "Pclass",
+    "Sex",
+    "Age",
+    "SibSp",
+    "Parch",
+    "Ticket",
+    "Fare",
+    "Cabin",
+    "Embarked",
   ];
 
   useEffect(() => {
@@ -45,7 +41,7 @@ const ToggleSelect = ({ columns, onChange }: ToggleSelectProps) => {
 
   const toggleOptions = () => setIsOpen((prev) => !prev);
 
-  const handleOptionToggle = (id: PassengerColumns) => onChange(id);
+  const handleOptionToggle = (id: PassengerColumn) => onChange(id);
 
   return (
     <div className={styles.wrapper}>
@@ -54,9 +50,9 @@ const ToggleSelect = ({ columns, onChange }: ToggleSelectProps) => {
         <div className={styles.selectBox} onClick={toggleOptions}>
           {columns.length > 0
             ? columns
-                .map((optionId) => {
-                  const option = options.find((opt) => opt.id === optionId);
-                  return option ? option.label : "";
+                .map((column) => {
+                  const option = options.find((opt) => opt === column);
+                  return option ? option : "";
                 })
                 .join(", ")
             : "Select Options"}
@@ -66,14 +62,14 @@ const ToggleSelect = ({ columns, onChange }: ToggleSelectProps) => {
           <div className={styles.optionsList}>
             {options.map((option) => (
               <div
-                key={option.id}
+                key={option}
                 className={`${styles.optionItem} ${
-                  columns.includes(option.id) ? styles.selected : ""
+                  columns.includes(option) ? styles.selected : ""
                 }`}
-                onClick={() => handleOptionToggle(option.id as PassengerColumns)}
+                onClick={() => handleOptionToggle(option as PassengerColumn)}
               >
-                <span>{option.label}</span>
-                {columns.includes(option.id) && (
+                <span>{mapNames(option)}</span>
+                {columns.includes(option) && (
                   <span className={styles.checkmark}>✔</span>
                 )}
               </div>
